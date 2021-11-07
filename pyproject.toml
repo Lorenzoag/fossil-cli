@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fossil-cli"
-version = "4.0.0"
+version = "4.1.1"
 description = "Fossil Cli Helper"
 authors = ["Lorenzo Antonio Garcia Calzadilla <lorenzogarciacalzadilla@gmail.com>"]
 license = "MIT"
