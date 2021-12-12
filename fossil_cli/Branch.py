@@ -90,10 +90,10 @@ def branch():
 
             if confirm(f"Deseas regresar a la rama develop?"):
                 run(f"{fossil} update develop")
-    
+
     elif current_branch.startswith("hotfix"):
         version = version.finalize_version()
-        
+
         if confirm(f"Estas seguro de unificar la rama {current_branch} en develop?"):
             run(f"{fossil} update develop")
             run(f"{fossil} merge --integrate {current_branch}")
