@@ -14,7 +14,6 @@ def new(name, filename, readme, version):
     """
     Crea un nuevo repositorio.
     """
-    print(version)
 
     repo = filename or Path(prompt("Archivo del repositorio", default=".fossil"))
     if repo.is_absolute():
