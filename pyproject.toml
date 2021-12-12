@@ -24,6 +24,8 @@ semver = "*" #"^2.9.0"
 
 [tool.poetry.dev-dependencies]
 tox = "*" #"^0.1.0"
+isort = "^5.9.3"
+black = "^21.9b0"
 
 [[tool.poetry.source]]
 name = "private"
