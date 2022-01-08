@@ -2,7 +2,7 @@ from pathlib import Path
 
 from click import command, option
 
-from .utils import checkbox, echo, error, fossil, prompt, run
+from .utils import checkbox, error, fossil, prompt, run
 
 
 @command()
@@ -15,13 +15,17 @@ def new(name, filename, readme, version):
     Crea un nuevo repositorio.
     """
 
-    repo = filename or Path(prompt("Archivo del repositorio", default=".fossil"))
+    repo = filename or Path(
+        prompt("Archivo del repositorio", default=".fossil")
+    )
     if repo.is_absolute():
         error(f"{repo} no es relativo")
     if repo.exists():
         error(f"Ya existe el repositorio {repo}")
 
-    name = name or prompt("Nombre del repositorio", default=Path().absolute().name)
+    name = name or prompt(
+        "Nombre del repositorio", default=Path().absolute().name
+    )
     readme = readme or prompt("Nombre del archivo readme", default="README.md")
 
     # Create the repo

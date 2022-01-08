@@ -18,7 +18,9 @@ def commit():
         error("No existen cambios")
 
     version = get_version(current_branch)
-    if current_branch.startswith("feature-") or current_branch.startswith("hotfix-"):
+    if current_branch.startswith("feature-") or current_branch.startswith(
+        "hotfix-"
+    ):
         version = version.next_version("prerelease", "dev")
     elif current_branch.startswith("release-"):
         version = version.next_version("prerelease")
@@ -56,7 +58,8 @@ def commit():
     if change_type.startswith("cancelar"):
         error("Cancelando")
     change_concept = select(
-        "Selecciona el concepto de cambio del commit:", choices=changes[change_type]
+        "Selecciona el concepto de cambio del commit:",
+        choices=changes[change_type],
     ).split(":")[0]
     change_type = change_type.split(":")[0]
     change_body = prompt("Escriba el cuerpo del commit")

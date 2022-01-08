@@ -1,5 +1,3 @@
-import re
-
 from click import command
 from semver import VersionInfo
 

@@ -1,8 +1,6 @@
-from pathlib import Path
+from click import command
 
-from click import command, option
-
-from .utils import checkbox, confirm, echo, error, fossil, prompt, run, select
+from .utils import confirm, echo, error, fossil, prompt, run, select
 from .Version import get_version
 
 
@@ -44,7 +42,9 @@ def branch():
 
         if branch.startswith("feature"):
             br_name = "feature-" + prompt("Escriba nombre de la rama")
-            version = version.next_version("minor").next_version("prerelease", "dev")
+            version = version.next_version("minor").next_version(
+                "prerelease", "dev"
+            )
         else:
             br_name = f"release-{str(version)}"
             version = version.next_version("prerelease")
@@ -56,7 +56,9 @@ def branch():
 
     elif current_branch.startswith("feature"):
         version = version.finalize_version()
-        if confirm(f"Estas seguro de unificar la rama {current_branch} en develop?"):
+        if confirm(
+            f"Estas seguro de unificar la rama {current_branch} en develop?"
+        ):
             run(f"{fossil} update develop")
             run(f"{fossil} merge --integrate {current_branch}")
             run(
@@ -64,13 +66,15 @@ def branch():
             )
             run(f"{fossil} tag add v{str(version)} develop")
 
-            if confirm(f"Deseas unificar la rama develop en trunk?"):
+            if confirm("Deseas unificar la rama develop en trunk?"):
                 run(f"{fossil} update trunk")
                 run(f"{fossil} merge develop")
-                run(f'{fossil} commit -m "Unificando la rama develop" --no-warnings')
+                run(
+                    f'{fossil} commit -m "Unificando la rama develop" --no-warnings'
+                )
                 run(f"{fossil} tag add v{str(version)} trunk")
 
-                if confirm(f"Deseas regresar a la rama develop?"):
+                if confirm("Deseas regresar a la rama develop?"):
                     run(f"{fossil} update develop")
 
     elif current_branch.startswith("release"):
@@ -85,16 +89,20 @@ def branch():
 
             run(f"{fossil} update trunk")
             run(f"{fossil} merge develop")
-            run(f'{fossil} commit -m "Unificando la rama develop" --no-warnings')
+            run(
+                f'{fossil} commit -m "Unificando la rama develop" --no-warnings'
+            )
             run(f"{fossil} tag add v{str(version)} trunk")
 
-            if confirm(f"Deseas regresar a la rama develop?"):
+            if confirm("Deseas regresar a la rama develop?"):
                 run(f"{fossil} update develop")
 
     elif current_branch.startswith("hotfix"):
         version = version.finalize_version()
 
-        if confirm(f"Estas seguro de unificar la rama {current_branch} en develop?"):
+        if confirm(
+            f"Estas seguro de unificar la rama {current_branch} en develop?"
+        ):
             run(f"{fossil} update develop")
             run(f"{fossil} merge --integrate {current_branch}")
             run(
@@ -102,11 +110,13 @@ def branch():
             )
             run(f"{fossil} tag add v{str(version)} develop")
 
-            if confirm(f"Deseas unificar la rama develop en trunk?"):
+            if confirm("Deseas unificar la rama develop en trunk?"):
                 run(f"{fossil} update trunk")
                 run(f"{fossil} merge develop")
-                run(f'{fossil} commit -m "Unificando la rama develop" --no-warnings')
+                run(
+                    f'{fossil} commit -m "Unificando la rama develop" --no-warnings'
+                )
                 run(f"{fossil} tag add v{str(version)} trunk")
 
-                if confirm(f"Deseas regresar a la rama develop?"):
+                if confirm("Deseas regresar a la rama develop?"):
                     run(f"{fossil} update develop")
