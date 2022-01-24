@@ -2,19 +2,16 @@ from pathlib import Path
 
 from click import command, option
 
-from .utils import checkbox, echo, error, fossil, prompt, run
+from .utils import checkbox, error, fossil, prompt, run, run_pre_pos
 
 
 @command()
-@option("-n", "--name", type=str, help="Nombre del repositorio")
 @option("-f", "--filename", type=Path, help="Archivo del repositorio")
-@option("-r", "--readme", type=Path, help="Nombre del archivo readme")
 @option("-v", "--version", type=Path, help="Version Inicial", default="0.0.0")
-def new(name, filename, readme, version):
+def new(filename, version):
     """
     Crea un nuevo repositorio.
     """
-    print(version)
 
     repo = filename or Path(prompt("Archivo del repositorio", default=".fossil"))
     if repo.is_absolute():
@@ -22,19 +19,10 @@ def new(name, filename, readme, version):
     if repo.exists():
         error(f"Ya existe el repositorio {repo}")
 
-    name = name or prompt("Nombre del repositorio", default=Path().absolute().name)
-    readme = readme or prompt("Nombre del archivo readme", default="README.md")
+    run_pre_pos("pre_new", **locals())
 
     # Create the repo
     run(f"{fossil} init {repo}")
-
-    # Updating parameters
-    run(
-        f'''{fossil} sqlite "insert or replace into config values ('project-name', '{name}', now());" -R "{repo}"'''
-    )
-    run(
-        f'''{fossil} sqlite "insert or replace into config values ('index-page', '/doc/tip/{readme}', now());" -R "{repo}"'''
-    )
 
     # Opening the repo
     run(f"{fossil} open --force {repo}")
@@ -50,3 +38,5 @@ def new(name, filename, readme, version):
     run(f"{fossil} branch new develop trunk")
     run(f"{fossil} tag add v{version} develop")
     run(f"{fossil} update develop")
+
+    run_pre_pos("pos_new", **locals())
