@@ -1,6 +1,6 @@
 from click import command
 
-from .utils import confirm, error, fossil, prompt, run, select
+from .utils import confirm, echo, error, fossil, prompt, run, run_pre_pos, select
 from .Version import get_version
 
 
@@ -18,9 +18,11 @@ def commit():
         error("No existen cambios")
 
     version = get_version(current_branch)
-    if current_branch.startswith("feature-") or current_branch.startswith(
-        "hotfix-"
-    ):
+
+    echo(f"Rama actual     {current_branch}")
+    echo(f"Version actual  {version}")
+
+    if current_branch.startswith("feature-") or current_branch.startswith("hotfix-"):
         version = version.next_version("prerelease", "dev")
     elif current_branch.startswith("release-"):
         version = version.next_version("prerelease")
@@ -67,5 +69,9 @@ def commit():
     commit = f"{change_type}({change_concept}): {change_body}"
 
     if confirm("Estas seguro de aplicar el commit?"):
+        run_pre_pos("pre_commit", **locals())
+
         run(f'{fossil} commit -m "{commit}" --no-warnings')
         run(f"{fossil} tag add v{str(version)} {current_branch}")
+
+        run_pre_pos("pos_commit", **locals())

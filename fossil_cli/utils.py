@@ -1,4 +1,6 @@
+import platform
 from os import getenv
+from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_call, check_output
 
 import questionary
@@ -45,3 +47,15 @@ def shell(args):
         return check_call(args, stderr=PIPE)
     except CalledProcessError as e:
         error(e.stderr.decode(), e.returncode)
+
+
+def run_pre_pos(filename, **kwords):
+    if platform.system() == "Windows":
+        _file = Path(f".fossil_cli").with_stem(filename).with_suffix(".bat")
+    else:
+        _file = Path(f".fossil_cli").with_stem(filename).with_suffix(".sh")
+
+    if _file.exists():
+        for line in _file.read_text().readlines():
+            if line:
+                shell(line.format(**kwords))

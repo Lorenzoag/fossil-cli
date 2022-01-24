@@ -15,6 +15,5 @@ def get_version(check_in):
     tags = run(f"{fossil} tag list {check_in}").splitlines()
 
     for tag in tags:
-        if not VersionInfo.isvalid(tag[1:]):  # Se le quita el "v"
-            continue
-        return VersionInfo.parse(tag[1:])
+        if VersionInfo.isvalid(tag[1:]):  # Se le quita el "v"
+            return VersionInfo.parse(tag[1:])

@@ -2,9 +2,9 @@ from click import group
 
 from .Branch import branch
 from .Commit import commit
+from .Info import info
 from .New import new
 from .Version import version
-from .Info import info
 
 
 @group()
