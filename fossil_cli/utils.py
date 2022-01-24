@@ -46,16 +46,16 @@ def shell(args):
     try:
         return check_call(args, stderr=PIPE)
     except CalledProcessError as e:
-        error(e.stderr.decode(), e.returncode)
+        exit(e.returncode)
 
 
 def run_pre_pos(filename, **kwords):
     if platform.system() == "Windows":
-        _file = Path(f".fossil_cli").with_stem(filename).with_suffix(".bat")
+        _file = Path(f".fossil_cli/none").with_stem(filename).with_suffix(".bat")
     else:
-        _file = Path(f".fossil_cli").with_stem(filename).with_suffix(".sh")
+        _file = Path(f".fossil_cli/none").with_stem(filename).with_suffix(".sh")
 
     if _file.exists():
-        for line in _file.read_text().readlines():
+        for line in _file.read_text().splitlines():
             if line:
-                shell(line.format(**kwords))
+                run(line.format(**kwords))
